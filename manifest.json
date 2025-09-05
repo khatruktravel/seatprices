@@ -1,0 +1,22 @@
+{
+  "name": "أسعار الطيران - خاطرك",
+  "short_name": "خاطرك للطيران",
+  "description": "نظام تحديث أسعار تذاكر طيران اليمنية",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a1d90",
+  "theme_color": "#0a1d90",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://i.postimg.cc/XYgg7c0D/Logo-Yemenia.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.postimg.cc/XYgg7c0D/Logo-Yemenia.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

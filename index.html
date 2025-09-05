@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>تحديث أسعار الطيران - خاطرك</title>
+  <meta name="description" content="نظام تحديث أسعار تذاكر الطيران - خاطرك للسفريات والسياحة">
+  <meta name="theme-color" content="#0a1d90">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="https://i.postimg.cc/XYgg7c0D/Logo-Yemenia.png
+  " type="image/png">
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js
+  "></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f2f5;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .header {
+      background: white;
+      color: #0a1d90;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #0a1d90;
+      position: relative;
+    }
+    .header-content {
+      flex: 1;
+      text-align: center;
+      z-index: 1;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 19px;
+      font-weight: bold;
+      color: #0a1d90;
+    }
+    .header p {
+      margin: 10px 0 0;
+      font-size: 16px;
+      color: #ff3007;
+      font-weight: bold;
+    }
+    .header-img {
+      height: 70px;
+      width: auto;
+      object-fit: contain;
+      margin: 0 60px;
+    }
+    .controls {
+      padding: 15px;
+      background: #e3f2fd;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      border-bottom: 1px solid #ddd;
+    }
+    .controls select, .controls input, .controls button {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #0055aa;
+      border-radius: 8px;
+    }
+    .controls button {
+      background: #003366;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .controls button:hover {
+      background: #002244;
+    }
+    .controls button.add {
+      background: #28a745;
+    }
+    .controls button.add:hover {
+      background: #218838;
+    }
+    .controls button.print {
+      background: #007bff;
+    }
+    .controls button.clear {
+      background: #dc3545;
+    }
+    .controls button.clear:hover {
+      background: #c82333;
+    }
+    .controls button.download {
+      background: #ffc107;
+      color: #003366;
+    }
+    .controls button.download:hover {
+      background: #e0a800;
+    }
+    .controls button.text {
+      background: #6f42c1;
+      color: white;
+    }
+    .controls button.text:hover {
+      background: #5a2d9c;
+    }
+    .controls .quantity {
+      width: 80px;
+      text-align: center;
+    }
+    .content {
+      padding: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 8px;
+      font-size: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      border-radius: 15px;
+      overflow: hidden;
+    }
+    th {
+      background: linear-gradient(1deg, #005cb2, #003a7d);
+      color: white;
+      padding: 14px;
+      text-align: center;
+      border-radius: 15px 15px 0 0;
+      border-bottom: 3px solid #ff0000;
+    }
+    td {
+      padding: px;
+      text-align: center;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: -1px -1px 8px 0px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+    td:hover {
+      background-color: #f8f9fa;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    tr:nth-child(even) {
+      background: #f8f9fa;
+    }
+    .one-way {
+      color: #28a745;
+      font-weight: bold;
+      font-size: 17px;
+    }
+    .return {
+      color: #003366;
+      font-weight: bold;
+      font-size: 17px;
+    }
+    .date-bold {
+      font-weight: bold;
+      font-size: 17px;
+    }
+    .day-bold {
+      font-weight: bold;
+      font-size: 17px;
+    }
+    .editable {
+      cursor: pointer;
+      position: relative;
+    }
+    .editable:focus {
+      outline: 2px solid #0055aa;
+      border-radius: 8px;
+      background-color: #f0f8ff;
+    }
+    .delete-btn {
+      color: #ef4444;
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    .delete-btn:hover {
+      color: #dc2626;
+    }
+    .delete-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+    .footer {
+      text-align: center;
+      padding: 8px;
+      background: linear-gradient(
+179deg, #005cb2, #0b2d55);
+      color: white;
+      font-size: 21px;
+      font-weight: bold;
+    }
+    .footer a {
+      color: #ffc107;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 22px;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+    }
+    .timestamp {
+      text-align: center;
+      font-size: 19px;
+      color: #003366;
+      padding: 6px;
+      background: #f8f9fa;
+      font-weight: bold;
+      border-top: 0px solid #003366;
+      border-bottom: 2px solid #003366;
+    }
+    @media print {
+      .controls, .no-print {
+        display: none !important;
+      }
+      .delete-header, .delete-column {
+        display: none !important;
+      }
+    }
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        text-align: center;
+      }
+      .header-img {
+        margin: 10px 0;
+        height: 70px;
+      }
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="print-area">
+    <div class="header">
+      <img src="https://i.postimg.cc/XYgg7c0D/Logo-Yemenia.png
+  " alt="شعار خاطرك للسفريات" class="header-img">
+      <div class="header-content">
+        <h1>خاطرك للسفريات والسياحة والحج والعمرة</h1>
+        <p>أسعار تذاكر طيران اليمنية - تحديث مباشر</p>
+      </div>
+      <img src="https://i.postimg.cc/Dy9rcp7N/512.png
+  " alt="شعار إضافي" class="header-img">
+    </div>
+    <div class="controls no-print">
+      <select id="from-city" required>
+        <option value="">من</option>
+        <option value="عدن-ADE">عدن-ADE</option>
+        <option value="سيئون-GXF">سيئون-GXF</option>
+        <option value="الريان-RIY">الريان-RIY</option>
+        <option value="الغيضة-AAY">الغيضة-AAY</option>
+        <option value="سقطرى-SCT">سقطرى-SCT</option>
+        <option value="صنعاء-SAH">صنعاء-SAH</option>
+        <option value="القاهرة-CAI">القاهرة-CAI</option>
+        <option value="عمان-AMM">عمان-AMM</option>
+        <option value="جدة-JED">جدة-JED</option>
+        <option value="الرياض-RUH">الرياض-RUH</option>
+        <option value="دبي-DXB">دبي-DXB</option>
+        <option value="الكويت-KWI">الكويت-KWI</option>
+        <option value="جيبوتي-JIB">جيبوتي-JIB</option>
+        <option value="اديس-ADD">اديس-ADD</option>
+        <option value="مومباي-BOM">مومباي-BOM</option>
+      </select>
+      <select id="to-city" required>
+        <option value="">إلى</option>
+        <option value="عدن-ADE">عدن-ADE</option>
+        <option value="سيئون-GXF">سيئون-GXF</option>
+        <option value="الريان-RIY">الريان-RIY</option>
+        <option value="الغيضة-AAY">الغيضة-AAY</option>
+        <option value="سقطرى-SCT">سقطرى-SCT</option>
+        <option value="صنعاء-SAH">صنعاء-SAH</option>
+        <option value="القاهرة-CAI">القاهرة-CAI</option>
+        <option value="عمان-AMM">عمان-AMM</option>
+        <option value="جدة-JED">جدة-JED</option>
+        <option value="الرياض-RUH">الرياض-RUH</option>
+        <option value="دبي-DXB">دبي-DXB</option>
+        <option value="الكويت-KWI">الكويت-KWI</option>
+        <option value="jيبوتي-JIB">جيبوتي-JIB</option>
+        <option value="اديس-ADD">اديس-ADD</option>
+        <option value="مومباي-BOM">مومباي-BOM</option>
+      </select>
+      <input type="date" id="flight-date" required />
+      <input type="number" id="one-way-price" placeholder="سعر الذهاب فقط" />
+      <input type="number" id="return-price" placeholder="سعر الذهاب والعودة" />
+      <input type="text" id="notes" placeholder="ملاحظات (اختياري)" />
+      <input type="number" id="quantity" class="quantity" min="1" max="30" value="1" placeholder="عدد">
+      <button onclick="addFlight()" class="add">➕ إضافة رحلة</button>
+      <button onclick="clearTable()" class="clear">🗑️ مسح الجدول</button>
+      <button onclick="window.print()" class="print">🖨️ طباعة</button>
+      <button onclick="downloadImage()" class="download">💾 تنزيل كصورة</button>
+      <button onclick="downloadText()" class="text">📝 تنزيل كملف نصي</button>
+    </div>
+    <div class="timestamp" id="timestamp">
+      آخر تحديث : 03/09/2025 & الساعة: [03:47] ص
+    </div>
+    <div class="content">
+      <table id="flights-table">
+        <thead>
+          <tr>
+            <th>اليـــوم</th>
+            <th style="
+    padding-left: 14px;
+    padding-right: 14px;
+">التـــاريــخ</th>
+            <th style="
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 99.406;
+">الإقــــــلاع مــــــن</th>
+            <th style="
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 14px;
+">الوصــول إلـــــى</th>
+            <th style="
+    width: 92px;
+    padding-left: 9px;
+    padding-right: 9px;
+    height: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+">السعر ذهـابا فـقــــــــط</th>
+            <th style="
+    width: 92px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 9px;
+    padding-right: 9px;
+    height: 40px;
+">الســعر ذهــاب و العـــــــودة</th>
+            <th style="
+    width: 75px;
+    height: 40px;
+    padding-left: 11px;
+    padding-right: 11px;
+">مـــلاحـظـات</th>
+            <th class="delete-header">حذف</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+    <div class="footer">
+      للحجز او الاستفسار تواصل معنا : <a href="tel:778878820">778878820 - 778878810</a>
+    </div>
+  </div>
+  <script>
+    function updateTimestamp() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const ampm = now.getHours() >= 12 ? 'م' : 'ص';
+      const formattedHours = hours > 12 ? hours - 12 : (hours === 0 ? 12 : hours);
+      document.getElementById("timestamp").textContent = `آخر تحديث : ${day}/${month}/${year} & الساعة: [${String(formattedHours).padStart(2, '0')}:${minutes}] ${ampm}`;
+    }
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const day = date.getDate();
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
+      return `${day}‏/${month}‏/${year}`;
+    }
+    function getDayName(dateString) {
+      const date = new Date(dateString);
+      const days = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+      return days[date.getDay()];
+    }
+    function makeEditable(element, type = 'text', value = '') {
+      element.classList.remove('editable');
+      element.style.cursor = 'default';
+      let input;
+      if (type === 'date') {
+        input = document.createElement('input');
+        input.type = 'date';
+        const dateParts = value.split('/');
+        const year = dateParts[2];
+        const month = dateParts[1].padStart(2, '0');
+        const day = dateParts[0].padStart(2, '0');
+        input.value = `${year}-${month}-${day}`;
+      } else if (type === 'number') {
+        input = document.createElement('input');
+        input.type = 'number';
+        input.value = value.replace(' $', '').replace('-', '');
+      } else {
+        input = document.createElement('input');
+        input.type = 'text';
+        input.value = value === '-' ? '' : value;
+      }
+      input.style.width = '100%';
+      input.style.padding = '10px';
+      input.style.border = '2px solid #0055aa';
+      input.style.borderRadius = '8px';
+      input.style.textAlign = 'center';
+      input.style.fontSize = '16px';
+      element.innerHTML = '';
+      element.appendChild(input);
+      input.focus();
+      input.addEventListener('blur', function() {
+        let displayValue = input.value;
+        if (type === 'date' && input.value) {
+          const date = new Date(input.value);
+          const formattedDate = formatDate(input.value);
+          const dayName = getDayName(input.value);
+          // Update the date cell
+          element.textContent = formattedDate;
+          // Update the day cell (previous cell)
+          const dayCell = element.parentElement.children[0];
+          dayCell.textContent = dayName;
+        } else if (type === 'number') {
+          displayValue = displayValue ? `${displayValue} $` : '-';
+        } else {
+          displayValue = displayValue || '-';
+        }
+        element.textContent = displayValue;
+        element.classList.add('editable');
+        element.style.cursor = 'pointer';
+        updateTimestamp();
+      });
+      input.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          input.blur();
+        }
+      });
+    }
+    function addFlight() {
+      const from = document.getElementById("from-city").value;
+      const to = document.getElementById("to-city").value;
+      const date = document.getElementById("flight-date").value;
+      const oneWay = document.getElementById("one-way-price").value;
+      const returnPrice = document.getElementById("return-price").value;
+      const notes = document.getElementById("notes").value;
+      const quantity = parseInt(document.getElementById("quantity").value) || 1;
+      if (!from || !to || !date || !oneWay) {
+        alert("يرجى تعبئة جميع الحقول المطلوبة.");
+        return;
+      }
+      const formattedDate = formatDate(date);
+      const dayName = getDayName(date);
+      const tbody = document.querySelector("#flights-table tbody");
+      for (let i = 0; i < quantity; i++) {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td class="editable day-bold">${dayName}</td>
+          <td class="editable date-bold">${formattedDate}</td>
+          <td>${from}</td>
+          <td>${to}</td>
+          <td class="editable one-way">${oneWay} $</td>
+          <td class="editable return">${returnPrice ? returnPrice + ' $' : '-'}</td>
+          <td class="editable">${notes || '-'}</td>
+          <td class="delete-column px-6 py-4 text-center"><button class="delete-btn" onclick="deleteRow(this)">×</button></td>
+        `;
+        tbody.appendChild(row);
+      }
+      // Make all new cells editable
+      const newEditableCells = tbody.querySelectorAll('.editable');
+      newEditableCells.forEach(cell => {
+        cell.addEventListener('click', function(e) {
+          if (e.target === cell || e.target.classList.contains('editable')) {
+            let type = 'text';
+            let value = cell.textContent;
+            if (cell.classList.contains('date-bold')) {
+              type = 'date';
+            } else if (cell.classList.contains('one-way') || cell.classList.contains('return')) {
+              type = 'number';
+              value = value.replace(' $', '').replace('-', '');
+            } else if (cell.classList.contains('day-bold')) {
+              type = 'text';
+            }
+            makeEditable(cell, type, value);
+          }
+        });
+      });
+      document.getElementById("from-city").value = "";
+      document.getElementById("to-city").value = "";
+      document.getElementById("flight-date").value = "";
+      document.getElementById("one-way-price").value = "";
+      document.getElementById("return-price").value = "";
+      document.getElementById("notes").value = "";
+      updateTimestamp();
+    }
+    function deleteRow(button) {
+      if (confirm("هل أنت متأكد من رغبتك في حذف هذه الرحلة؟")) {
+        const row = button.closest("tr");
+        row.remove();
+        updateTimestamp();
+      }
+    }
+    function clearTable() {
+      if (confirm("هل أنت متأكد من رغبتك في مسح جميع الرحلات؟")) {
+        const tbody = document.querySelector("#flights-table tbody");
+        tbody.innerHTML = "";
+        updateTimestamp();
+      }
+    }
+    async function downloadImage() {
+      const controls = document.querySelector('.controls');
+      const deleteHeader = document.querySelector('.delete-header');
+      const deleteColumns = document.querySelectorAll('.delete-column');
+      // إخفاء العناصر
+      controls.style.display = 'none';
+      deleteHeader.style.display = 'none';
+      deleteColumns.forEach(col => col.style.display = 'none');
+      const element = document.getElementById("print-area");
+      try {
+        const canvas = await html2canvas(element, { scale: 2, useCORS: true });
+        const link = document.createElement("a");
+        link.download = `أسعار-الطيران-خاطرك-${new Date().toLocaleDateString('ar-SA')}.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      } catch (err) {
+        alert("حدث خطأ أثناء حفظ الصورة.");
+        console.error(err);
+      } finally {
+        // إعادة العرض
+        controls.style.display = '';
+        deleteHeader.style.display = '';
+        deleteColumns.forEach(col => col.style.display = '');
+      }
+    }
+    function downloadText() {
+      const rows = document.querySelectorAll("#flights-table tbody tr");
+      if (rows.length === 0) {
+        alert("لا توجد بيانات لتنزيلها.");
+        return;
+      }
+      let textData = "خاطرك للسفريات والسياحة - أسعار تذاكر الطيران\n";
+      textData += "============================================\n";
+      textData += "اليوم\tالتاريخ\tمن\tإلى\tسعر الذهاب\tسعر الذهاب والعودة\tملاحظات\n";
+      textData += "----\t------\t--\t--\t-----------\t------------------\t--------\n";
+      rows.forEach(row => {
+        const cells = row.querySelectorAll("td");
+        const rowData = [
+          cells[0].textContent.trim(),
+          cells[1].textContent.trim(),
+          cells[2].textContent.trim(),
+          cells[3].textContent.trim(),
+          cells[4].textContent.trim(),
+          cells[5].textContent.trim(),
+          cells[6].textContent.trim()
+        ];
+        textData += rowData.join("\t") + "\n";
+      });
+      textData += "\n============================================\n";
+      textData += `تم التحديث: ${document.getElementById("timestamp").textContent}\n`;
+      textData += "للحجز والاستفسار: 778878820 - 778878810";
+      const blob = new Blob([textData], { type: "text/plain;charset=utf-8" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `أسعار-الطيران-خاطرك-${new Date().toLocaleDateString('ar-SA')}.txt`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+    // Initialize editable cells
+    document.addEventListener('DOMContentLoaded', function() {
+      updateTimestamp();
+      document.addEventListener('click', function(e) {
+        const cell = e.target.closest('.editable');
+        if (cell && !e.target.closest('input')) {
+          let type = 'text';
+          let value = cell.textContent;
+          if (cell.classList.contains('date-bold')) {
+            type = 'date';
+          } else if (cell.classList.contains('one-way') || cell.classList.contains('return')) {
+            type = 'number';
+            value = value.replace(' $', '').replace('-', '');
+          } else if (cell.classList.contains('day-bold')) {
+            type = 'text';
+          }
+          makeEditable(cell, type, value);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
